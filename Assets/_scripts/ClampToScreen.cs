@@ -10,8 +10,8 @@ public class ClampToScreen :  MonoBehaviour
     private void Start()
     {
         var renderer = GetComponent<SpriteRenderer>();
-        widthBound = Screen.width - renderer.sprite.bounds.size.x * 100f * .5f;
-        heightBound = Screen.height - renderer.sprite.bounds.size.y * 100f * .5f;
+        widthBound = Screen.width - renderer.sprite.bounds.size.x * .5f;
+        heightBound = Screen.height - renderer.sprite.bounds.size.y * .5f;
     }
 
 	private void Update ()

@@ -11,9 +11,9 @@ public class TileMaps
             return new Tiles[]{
                         // Bottom first
                         Tiles.Empty,
+                        new Tiles(true, 0,0,0,0,0, 3,3,3,3,3),
+                        new Tiles(true, 1,1,1,1,1, 0,0,0,0,0),
                         Tiles.Empty,
-                        Tiles.Empty,
-                        new Tiles(true, 1),
                         Tiles.Empty,
                         Tiles.Empty,
                         Tiles.Empty,
