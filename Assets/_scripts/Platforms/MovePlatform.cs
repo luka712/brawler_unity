@@ -10,7 +10,7 @@ public class MovePlatform : MonoBehaviour
     [SerializeField]
     private Vector2 endPoint;
     [SerializeField]
-    private float speed;
+    private float speed = 5f;
 
     private Vector2 direction;
 

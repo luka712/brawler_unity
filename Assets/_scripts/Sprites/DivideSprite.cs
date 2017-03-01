@@ -5,18 +5,16 @@ using UnityEngine;
 public class DivideSprite : MonoBehaviour
 {
     [SerializeField]
-    private static Vector2 pass = new Vector2(4, 4);
-
+    private Vector2 pass = new Vector2(4, 4);
 
     private Sprite sprite;
 
     private void Start()
     {
         sprite = GetComponent<SpriteRenderer>().sprite;
-        Debug.Log(sprite);
     }
 
-    public IEnumerable<GameObject> Divide()
+    private IEnumerable<GameObject> CreateGameObjects()
     {
         var totalSpriteSize = new Vector2(sprite.texture.width, sprite.texture.height);
 
@@ -43,19 +41,19 @@ public class DivideSprite : MonoBehaviour
         var gameObject = new GameObject();
         var sr = gameObject.AddComponent<SpriteRenderer>();
         sr.sprite = sprite;
+        var collider = gameObject.AddComponent<Collider2D>();
+
         return gameObject;
     }
 
-    public void Update()
+    public void Divide()
     {
-        if (Input.GetKeyDown(KeyCode.G))
+        var spriteObjects = CreateGameObjects();
+        foreach (var spriteObj in spriteObjects)
         {
-            var spriteObjects = Divide();
-            foreach (var spriteObj in spriteObjects)
-            {
-                var rb = spriteObj.AddComponent<Rigidbody2D>();
-                rb.AddForce(new Vector2((float)Random.Range(-5000, 5000), (float)Random.Range(-5000, 5000)));
-            }
+            var rb = spriteObj.AddComponent<Rigidbody2D>();
+            rb.AddForce(new Vector2((float)Random.Range(-5000, 5000), (float)Random.Range(-5000, 5000)));
         }
     }
+
 }
