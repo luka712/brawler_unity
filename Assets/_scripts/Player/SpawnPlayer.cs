@@ -1,19 +1,29 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SpawnPlayer : MonoBehaviour
 {
 
+    /// <summary>
+    /// Number of players to add.
+    /// </summary>
     [SerializeField, Range(2, 4)]
-    private int numOfPlayers;
+    private int numOfPlayers = 0;
 
+    /// <summary>
+    /// Player to add.
+    /// </summary>
     [SerializeField]
     private Player[] players = new Player[4];
 
-
     #region  Unity Methods
 
+
+    /// <summary>
+    /// START
+    /// </summary>
     private void Start()
     {
         SpawnPlayers();
@@ -21,6 +31,9 @@ public class SpawnPlayer : MonoBehaviour
 
     #endregion
 
+    /// <summary>
+    /// Spawns players from list.
+    /// </summary>
     private void SpawnPlayers()
     {
         for (int i = 0; i < numOfPlayers; i++)
@@ -32,11 +45,10 @@ public class SpawnPlayer : MonoBehaviour
             }
             else
             {
-                var position = new Vector3(UnityEngine.Random.Range(0, Screen.width), Screen.height, -1);
-                Instantiate(player, position, Quaternion.identity);
-
+                player.Create();
             }
         }
-
     }
+
+   
 }

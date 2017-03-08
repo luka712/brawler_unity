@@ -10,8 +10,18 @@ public static class Extensions
         return new Vector2(vec.x, vec.y);
     }
 
+    public static Vector2 ToVector2(this Vector3 vec, float x , float y)
+    {
+        return new Vector2(x, y);
+    }
+
     public static Vector3 ToVector3(this Vector2 vec)
     {
         return new Vector3(vec.x, vec.y, 0f);
+    }
+
+    public static Vector3 ToVector3(this Vector2 vec, float z)
+    {
+        return new Vector3(vec.x, vec.y, z);
     }
 }
