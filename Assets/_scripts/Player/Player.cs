@@ -38,6 +38,7 @@ public class Player : MonoBehaviour
 
     private DivideSprite spriteDivider;
     private SpawnPlayer playerSpawner;
+    private PlayerInvicibleTimeAnimation spawnAnimation;
     private SpriteRenderer rend;
 
     #region Unity Methods
@@ -49,6 +50,7 @@ public class Player : MonoBehaviour
     {
         spriteDivider = GetComponent<DivideSprite>();
         playerSpawner = this.gameObject.AddComponent<SpawnPlayer>();
+        spawnAnimation = GetComponent<PlayerInvicibleTimeAnimation>();
         rend = gameObject.GetComponent<SpriteRenderer>();
         Health = Constants.PlayerHealth;
         Lives = Constants.PlayerLives;
@@ -65,16 +67,19 @@ public class Player : MonoBehaviour
         // No need to check if dead.
         if (Health <= 0) return;
 
-        if (coll.gameObject.tag == "RotPlatform")
+        if (!spawnAnimation.IsPlaying)
         {
-            var platform = coll.gameObject.GetComponent<Platform>();
-            this.Health -= platform.Damage;
-            if(Health <= 0)
+            if (coll.gameObject.tag == "RotPlatform")
             {
-                var dir = this.transform.position.ToVector2() - coll.contacts.First().point;
-                ExplodePlayerToPieces(dir);
-                PlayerDied();
-                Spawn(out hasSpawned);
+                var platform = coll.gameObject.GetComponent<Platform>();
+                this.Health -= platform.Damage;
+                if (Health <= 0)
+                {
+                    var dir = this.transform.position.ToVector2() - coll.contacts.First().point;
+                    ExplodePlayerToPieces(dir);
+                    PlayerDied();
+                    Spawn(out hasSpawned);
+                }
             }
         }
     }
@@ -158,6 +163,7 @@ public class Player : MonoBehaviour
         this.Health = Constants.PlayerHealth;
         this.transform.position = new Vector3(UnityEngine.Random.Range(0, Screen.width), Screen.height, this.transform.position.z);
         rend.color = new Color(rend.color.r, rend.color.g, rend.color.b, 255f);
+        spawnAnimation.Play();
     }
 
     #endregion

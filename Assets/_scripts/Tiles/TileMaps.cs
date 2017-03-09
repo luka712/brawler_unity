@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Level maps.
+/// </summary>
 public class TileMaps 
 {
-    public static Tiles[] GetMap
+    public static Tiles[] DemoLevel
     {
         get
         {

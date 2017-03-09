@@ -15,7 +15,7 @@ public class TileSpawner : MonoBehaviour
 
     private void Awake()
     {
-        tileRows = TileMaps.GetMap;
+        tileRows = TileMaps.DemoLevel;
         CreateTiles();
     }
 
