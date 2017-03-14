@@ -1,18 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class TileSpawner : MonoBehaviour
 {
-
+    /// <summary>
+    /// Tiles and respective indexes.
+    /// </summary>
     [SerializeField]
     private List<GameObject> tiles;
 
-    private List<GameObject> tileInstances = new List<GameObject>();
+    private IList<GameObject> tileInstances = new List<GameObject>();
     private Tiles[] tileRows;
 
     #region Unity Methods
 
+    /// <summary>
+    /// Awake method.
+    /// </summary>
     private void Awake()
     {
         tileRows = TileMaps.DemoLevel;
@@ -21,29 +27,34 @@ public class TileSpawner : MonoBehaviour
 
     #endregion
 
+    /// <summary>
+    /// Creates map tiles.
+    /// </summary>
     private void CreateTiles()
     {
-        int height = 0;
+        int yPos = 0;
         foreach (var row in tileRows)
         {
-            int width = -Constants.TileSize;
+            int xPos = -Constants.TileSize;
             bool repeat = row.Repeating;
-            height += Constants.TileSize;
+            yPos += Constants.TileSize;
 
-            if (height > Screen.height) break;
+            if (yPos > Screen.height) break;
 
             do
             {
                 for (var i = 0; i < row.TileIndexes.Length; i++)
                 {
-                    width += Constants.TileSize;
+                    xPos += Constants.TileSize;
                     var tile = tiles[row.TileIndexes[i]];
+
                     if (tile != null)
                     {
                         tileInstances.Add(
-                            Instantiate<GameObject>(tile, new Vector3(width, height, -1), Quaternion.identity));
+                            Instantiate<GameObject>(tile, new Vector3(xPos, yPos, -1), Quaternion.identity));
                     }
-                    if (width > Screen.width)
+
+                    if (xPos > Screen.width)
                     {
                         repeat = false;
                         break;

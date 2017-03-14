@@ -9,4 +9,9 @@ public class Constants
     public const int PlayerLives = 3;
     public const float PlayerSpawnTime = 3f;
     public const int PlayerHealth = 100;
+    public const int ForceMultipler = 1000;
+    public const int PlatformCollisionMinForceRange = 5;
+    public const int PlatformCOllisionMaxForceRange = 15;
+    public const float PickUpSpawnTime = 10f;
+    public const float Gravity = 50f;
 }

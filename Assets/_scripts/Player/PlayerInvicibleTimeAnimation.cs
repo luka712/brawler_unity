@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,8 +18,16 @@ public class PlayerInvicibleTimeAnimation : MonoBehaviour
     private int playTimes = 3;
     private int playedTimes = 0;
 
+    /// <summary>
+    /// Public bool which indicated animation playing state.
+    /// </summary>
     [HideInInspector]
     public bool IsPlaying { get; private set; }
+
+    /// <summary>
+    /// Animation finsihed event handler.
+    /// </summary>
+    public event Action OnAnimationFinished;
 
     private SpriteRenderer rend;
     private float alphaColor;
@@ -51,6 +60,10 @@ public class PlayerInvicibleTimeAnimation : MonoBehaviour
                     alphaGoingUp = false;
                     if(++playedTimes >= playTimes)
                     {
+                        if(OnAnimationFinished != null)
+                        {
+                            OnAnimationFinished();
+                        }
                         IsPlaying = false;
                         playedTimes = 0;
                     }
