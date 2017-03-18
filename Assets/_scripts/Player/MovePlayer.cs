@@ -42,7 +42,7 @@ public class MovePlayer : MonoBehaviour
     private void FixedUpdate ()
     {
         var directionX = Input.GetAxis("Horizontal");
-        animator.SetFloat("running", Mathf.Abs(directionX));
+        animator.SetFloat(AnimationNames.Running, Mathf.Abs(directionX));
         float direction = directionX * Time.deltaTime * speed;
         this.transform.Translate(Vector3.right * direction);
 
@@ -60,7 +60,7 @@ public class MovePlayer : MonoBehaviour
             if(this.thisCollider.bounds.center.y >= contanctPoint.y)
             {
                 canJump = true;
-                animator.SetBool("jumping", false);
+                animator.SetBool(AnimationNames.Jumping, false);
             }
         }
 
@@ -79,7 +79,7 @@ public class MovePlayer : MonoBehaviour
         {
             rb.AddForce(Vector2.up * jumpStrength);
             canJump = false;
-            animator.SetBool("jumping", true);
+            animator.SetBool(AnimationNames.Jumping, true);
         }
     }
 

@@ -53,6 +53,7 @@ public class Player : MonoBehaviour
         rigBody = GetComponent<Rigidbody2D>();
         Health = Constants.PlayerHealth;
         Lives = Constants.PlayerLives;
+        gameObject.SetActive(false);
     }
 
 
@@ -98,7 +99,7 @@ public class Player : MonoBehaviour
     /// </summary>
     public void Create()
     {
-        Instantiate(this);
+        this.gameObject.SetActive(true);
         Reset();
         StartCoroutine(CourutineSpawn());
     }
