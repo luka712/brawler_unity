@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Assets._scripts.Utilities
+﻿
+/// <summary>
+///     Axis
+/// </summary>
+public class Axis
 {
-    public class Axis
-    {
-        public const string Horizontal = "Horizontal";
-        public const string Vertical = "Vertical";
-    }
+    public const string Horizontal = "Horizontal";
+    public const string Vertical = "Vertical";
 }
+

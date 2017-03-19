@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MovePlayer : MonoBehaviour
 {
+    private float startingScaleX;
+
     /// <summary>
     /// Gets or set player movement speed
     /// </summary>
@@ -34,19 +36,22 @@ public class MovePlayer : MonoBehaviour
         animator = GetComponent<Animator>();
 
         jumpStrength *= Constants.JumpStrengthMultipler;
+
+        startingScaleX = gameObject.transform.localScale.x;
     }
 
     /// <summary>
     /// Unity fixed update.
     /// </summary>
-    private void FixedUpdate ()
+    private void FixedUpdate()
     {
-        var directionX = Input.GetAxis("Horizontal");
+        var directionX = Input.GetAxis(Axis.Horizontal);
         animator.SetFloat(AnimationNames.Running, Mathf.Abs(directionX));
         float direction = directionX * Time.deltaTime * speed;
         this.transform.Translate(Vector3.right * direction);
 
         Jump();
+        SwitchDirection(directionX);
     }
 
     /// <summary>
@@ -57,7 +62,7 @@ public class MovePlayer : MonoBehaviour
         if (coll.gameObject.tag == "Tile")
         {
             var contanctPoint = coll.contacts[0].point;
-            if(this.thisCollider.bounds.center.y >= contanctPoint.y)
+            if (this.thisCollider.bounds.center.y >= contanctPoint.y)
             {
                 canJump = true;
                 animator.SetBool(AnimationNames.Jumping, false);
@@ -81,6 +86,31 @@ public class MovePlayer : MonoBehaviour
             canJump = false;
             animator.SetBool(AnimationNames.Jumping, true);
         }
+    }
+
+    /// <summary>
+    /// Changes x scale depending on direction.
+    /// </summary>
+    private void SwitchDirection(float x)
+    {
+
+        if (x > 0)
+        {
+            Debug.Log(x);
+            x = 1f;
+        }
+        else if (x < 0)
+        {
+            Debug.Log(x);
+            x = -1f;
+        }
+
+        if (x == 1f || x == -1f)
+        {
+            var scale = gameObject.transform.localScale;
+            gameObject.transform.localScale = new Vector3(startingScaleX * x, scale.y, scale.z);
+        }
+
     }
 
     #endregion

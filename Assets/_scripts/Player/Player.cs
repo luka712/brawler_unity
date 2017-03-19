@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     private PlayerInvicibleTimeAnimation spawnAnimation;
     private SpriteRenderer rend;
     private Rigidbody2D rigBody;
+    private float lastFacingDirection;
 
     /// <summary>
     /// Gets or sets player health.
@@ -39,6 +40,12 @@ public class Player : MonoBehaviour
     [HideInInspector]
     public int Lives { get; private set; }
 
+    /// <summary>
+    /// Gets or sets equiped weapon.
+    /// </summary>
+    [HideInInspector]
+    public BaseWeapon EquipedWeapon { get; set; }
+
     #region Unity Methods
 
     /// <summary>
@@ -56,6 +63,30 @@ public class Player : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Unity update.
+    /// </summary>
+    private void Update()
+    {
+        var lastDirection = Input.GetAxis(Axis.Horizontal);
+        if(lastDirection > 0)
+        {
+            lastFacingDirection = 1;
+        }
+        else if(lastDirection < 0)
+        {
+            lastFacingDirection = -1;
+        }
+
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            if(EquipedWeapon != null)
+            {
+                EquipedWeapon.Shoot(new Vector2(lastFacingDirection, 0));
+            }
+        }
+    }
+
 
     /// <summary>
     /// Unity collisions.
@@ -70,7 +101,7 @@ public class Player : MonoBehaviour
 
         if (!spawnAnimation.IsPlaying)
         {
-            if (coll.gameObject.tag == "RotPlatform")
+            if (coll.gameObject.tag == Tags.RotatingPlatform)
             {
                 var platform = coll.gameObject.GetComponent<Platform>();
                 this.Health -= platform.Damage;
@@ -178,5 +209,6 @@ public class Player : MonoBehaviour
         spawnAnimation.Play();
     }
 
+   
     #endregion
 }

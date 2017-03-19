@@ -10,8 +10,8 @@ using System.Linq;
 /// </summary>
 public class PlayerPickUpItemCollision : MonoBehaviour
 {
-
-    private Animator animator;  
+    private Player player;
+    private Animator animator;
 
     [SerializeField]
     private List<PickUpItemKeyValue> pickUps = new List<PickUpItemKeyValue>();
@@ -24,6 +24,7 @@ public class PlayerPickUpItemCollision : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
+        player = GetComponent<Player>();
     }
 
     /// <summary>
@@ -46,10 +47,11 @@ public class PlayerPickUpItemCollision : MonoBehaviour
                     break;
             }
 
-            if(type != null)
+            if (type != null)
             {
                 var go = gameObject.GetComponentInChildren(type, true);
                 go.gameObject.SetActive(true);
+                player.EquipedWeapon = (BaseWeapon)go;
                 animator.SetBool(AnimationNames.HasWeapon, true);
             }
 
