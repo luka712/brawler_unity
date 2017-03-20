@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using UnityEngine;
 using System.Linq;
+using System;
 
+public delegate void HealthChange(int health);
 
 public class Player : MonoBehaviour
 {
@@ -10,7 +12,13 @@ public class Player : MonoBehaviour
     private PlayerInvicibleTimeAnimation spawnAnimation;
     private SpriteRenderer rend;
     private Rigidbody2D rigBody;
+    private ClampToScreen clamp;
     private float lastFacingDirection;
+
+    /// <summary>
+    /// Called when health has changed.
+    /// </summary>
+    public event HealthChange OnDamageApplied;
 
     /// <summary>
     /// Gets or sets player health.
@@ -31,6 +39,10 @@ public class Player : MonoBehaviour
             {
                 health = 0;
             }
+            if (OnDamageApplied != null)
+            {
+                OnDamageApplied(health);
+            }
         }
     }
 
@@ -46,6 +58,16 @@ public class Player : MonoBehaviour
     [HideInInspector]
     public BaseWeapon EquipedWeapon { get; set; }
 
+    /// <summary>
+    /// Gets player index.
+    /// </summary>
+    [SerializeField]
+    private PlayerIndex playerIndex;
+    public PlayerIndex PlayerIndex
+    {
+        get { return playerIndex; }
+    }
+
     #region Unity Methods
 
     /// <summary>
@@ -58,9 +80,9 @@ public class Player : MonoBehaviour
         spawnAnimation = GetComponent<PlayerInvicibleTimeAnimation>();
         rend = GetComponent<SpriteRenderer>();
         rigBody = GetComponent<Rigidbody2D>();
+        clamp = GetComponent<ClampToScreen>();
         Health = Constants.PlayerHealth;
         Lives = Constants.PlayerLives;
-        gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -78,7 +100,8 @@ public class Player : MonoBehaviour
             lastFacingDirection = -1;
         }
 
-        if(Input.GetKeyDown(KeyCode.Space))
+        if((Input.GetKey(KeyCode.LeftControl) && PlayerIndex == PlayerIndex.One)
+            || (Input.GetButton(Buttons.Player2Shoot) && PlayerIndex == PlayerIndex.Two))
         {
             if(EquipedWeapon != null)
             {
@@ -113,8 +136,8 @@ public class Player : MonoBehaviour
                 else
                 {
                     rigBody.AddForce(new Vector2(
-                        dir.x * Random.Range(Constants.PlatformCollisionMinForceRange, Constants.PlatformCOllisionMaxForceRange),
-                        dir.y * Random.Range(Constants.PlatformCollisionMinForceRange, Constants.PlatformCOllisionMaxForceRange))
+                        dir.x * UnityEngine.Random.Range(Constants.PlatformCollisionMinForceRange, Constants.PlatformCOllisionMaxForceRange),
+                        dir.y * UnityEngine.Random.Range(Constants.PlatformCollisionMinForceRange, Constants.PlatformCOllisionMaxForceRange))
                         * Constants.ForceMultipler);
                 }
             }
@@ -128,11 +151,18 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Creates player.
     /// </summary>
-    public void Create()
+    public void Create(bool firstSpawn = false)
     {
-        this.gameObject.SetActive(true);
         Reset();
-        StartCoroutine(CourutineSpawn());
+        if (!firstSpawn)
+        {
+            StartCoroutine(CourutineSpawn());
+        }
+        else
+        {
+            Reset();
+        }
+
     }
 
     /// <summary>
@@ -192,7 +222,7 @@ public class Player : MonoBehaviour
     private IEnumerator CourutineSpawn()
     {
 
-        this.gameObject.transform.position = new Vector3(1000, 1000, this.transform.position.z);
+        this.gameObject.transform.position = new Vector3(10000, -10000, this.transform.position.z);
         yield return new WaitForSeconds(Constants.PlayerSpawnTime);
 
         Reset();
@@ -207,6 +237,7 @@ public class Player : MonoBehaviour
         this.transform.position = new Vector3(UnityEngine.Random.Range(0, Screen.width), Screen.height, this.transform.position.z);
         rend.color = new Color(rend.color.r, rend.color.g, rend.color.b, 1f);
         spawnAnimation.Play();
+        clamp.ApplyClamp = true;
     }
 
    

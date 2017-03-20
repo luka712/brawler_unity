@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class SpawnPlayer : MonoBehaviour
 {
-
+    [SerializeField]
+    private float initialSpawnTime = 2f;
     /// <summary>
     /// Number of players to add.
     /// </summary>
@@ -26,7 +27,7 @@ public class SpawnPlayer : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        SpawnPlayers();
+        StartCoroutine(SpawnPlayers(true));
     }
 
     #endregion
@@ -34,10 +35,16 @@ public class SpawnPlayer : MonoBehaviour
     /// <summary>
     /// Spawns players from list.
     /// </summary>
-    private void SpawnPlayers()
+    private IEnumerator SpawnPlayers(bool firstSpawn = false)
     {
+        yield return new WaitForSeconds(2);
         for (int i = 0; i < numOfPlayers; i++)
         {
+            if(i >= players.Length)
+            {
+                break;
+            }
+
             var player = players[i];
             if (player == null)
             {
@@ -45,7 +52,7 @@ public class SpawnPlayer : MonoBehaviour
             }
             else
             {
-                player.Create();
+                player.Create(firstSpawn);
             }
         }
     }

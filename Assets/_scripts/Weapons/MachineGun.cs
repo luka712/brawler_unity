@@ -14,8 +14,9 @@ public class MachineGun : BaseWeapon
     /// <summary>
     ///  Unity start.
     /// </summary>
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         inactiveBullets = new List<BaseBullet>();
         activeBullets = new List<BaseBullet>();
 

@@ -13,5 +13,5 @@ public class Constants
     public const int PlatformCollisionMinForceRange = 5;
     public const int PlatformCOllisionMaxForceRange = 15;
     public const float PickUpSpawnTime = 10f;
-    public const float Gravity = 50f;
+    public const float Gravity = 70f;
 }

@@ -24,7 +24,7 @@ public abstract class BaseWeapon : MonoBehaviour
     /// <summary>
     /// Unity start.
     /// </summary>
-    private void Start()
+    protected virtual void Start()
     {
         gameObject.SetActive(false);
     }
@@ -38,6 +38,10 @@ public abstract class BaseWeapon : MonoBehaviour
         if (coolTimer > coolTime)
         {
             canShoot = true;
+        }
+        else
+        {
+            canShoot = false;
         }
 
         for (int i = activeBullets.Count - 1; i >= 0; i--)

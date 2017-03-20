@@ -55,6 +55,7 @@ public class PlayerPickUpItemCollision : MonoBehaviour
                 animator.SetBool(AnimationNames.HasWeapon, true);
             }
 
+            Destroy(collision.gameObject);
         }
     }
 

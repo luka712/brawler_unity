@@ -23,6 +23,7 @@ public class MovePlayer : MonoBehaviour
     private Collider2D thisCollider;
     private Rigidbody2D rb;
     private Animator animator;
+    private PlayerIndex playerIndex;
 
     #region Unity Methods
 
@@ -34,6 +35,7 @@ public class MovePlayer : MonoBehaviour
         thisCollider = GetComponent<Collider2D>();
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        playerIndex = GetComponent<Player>().PlayerIndex;
 
         jumpStrength *= Constants.JumpStrengthMultipler;
 
@@ -45,12 +47,46 @@ public class MovePlayer : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
-        var directionX = Input.GetAxis(Axis.Horizontal);
+        float directionX = 0;
+        if(playerIndex == PlayerIndex.One)
+        {
+            if(Input.GetKey(KeyCode.LeftArrow))
+            {
+                directionX = -1;
+            }
+            else if(Input.GetKey(KeyCode.RightArrow))
+            {
+                directionX = 1;
+            }
+
+            if(Input.GetKeyDown(KeyCode.Space))
+            {
+                Jump();
+            }
+        }
+        else if(playerIndex == PlayerIndex.Two)
+        {
+            directionX = Input.GetAxis(Axis.Horizontal);
+
+            if (Input.GetButtonDown(Buttons.Player2Jump))
+            {
+                Jump();
+            }
+        }
+
+        if(directionX > 0)
+        {
+            directionX = 1;
+        }
+        else if(directionX < 0)
+        {
+            directionX = -1;
+        }
+
         animator.SetFloat(AnimationNames.Running, Mathf.Abs(directionX));
         float direction = directionX * Time.deltaTime * speed;
         this.transform.Translate(Vector3.right * direction);
 
-        Jump();
         SwitchDirection(directionX);
     }
 
@@ -80,7 +116,7 @@ public class MovePlayer : MonoBehaviour
     /// </summary>
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && canJump)
+        if ( canJump)
         {
             rb.AddForce(Vector2.up * jumpStrength);
             canJump = false;
@@ -96,12 +132,10 @@ public class MovePlayer : MonoBehaviour
 
         if (x > 0)
         {
-            Debug.Log(x);
             x = 1f;
         }
         else if (x < 0)
         {
-            Debug.Log(x);
             x = -1f;
         }
 
