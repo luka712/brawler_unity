@@ -9,6 +9,10 @@ public class BaseBullet : MonoBehaviour
     /// </summary>
     public virtual int Damage { get; protected set; }
 
+    [SerializeField]
+    private PlayerIndex playerIndex;
+    public PlayerIndex PlayerIndex { get { return playerIndex; } }
+
     protected Vector2 direction;
     /// <summary>
     ///  Gets or sets direction.

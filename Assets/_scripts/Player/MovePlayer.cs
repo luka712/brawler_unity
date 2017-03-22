@@ -25,6 +25,8 @@ public class MovePlayer : MonoBehaviour
     private Animator animator;
     private PlayerIndex playerIndex;
 
+    public Vector2 Direction { get; private set; }
+
     #region Unity Methods
 
     /// <summary>
@@ -143,6 +145,7 @@ public class MovePlayer : MonoBehaviour
         {
             var scale = gameObject.transform.localScale;
             gameObject.transform.localScale = new Vector3(startingScaleX * x, scale.y, scale.z);
+            Direction = new Vector2(x, 0);
         }
 
     }

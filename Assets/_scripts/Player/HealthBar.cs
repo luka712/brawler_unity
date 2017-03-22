@@ -19,8 +19,7 @@ public class HealthBar : MonoBehaviour
         player = GetComponentInParent<Player>();
         player.OnDamageApplied += (health) =>
         {
-            initialScale *= health * 0.01f;
-            gameObject.transform.localScale = initialScale;
+            gameObject.transform.localScale = initialScale * health * 0.01f;
         };
     }
 }

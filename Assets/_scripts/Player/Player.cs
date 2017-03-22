@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     private SpriteRenderer rend;
     private Rigidbody2D rigBody;
     private ClampToScreen clamp;
+    private MovePlayer movePlayerScript;
     private float lastFacingDirection;
 
     /// <summary>
@@ -81,6 +82,7 @@ public class Player : MonoBehaviour
         rend = GetComponent<SpriteRenderer>();
         rigBody = GetComponent<Rigidbody2D>();
         clamp = GetComponent<ClampToScreen>();
+        movePlayerScript = GetComponent<MovePlayer>();
         Health = Constants.PlayerHealth;
         Lives = Constants.PlayerLives;
     }
@@ -90,7 +92,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        var lastDirection = Input.GetAxis(Axis.Horizontal);
+        var lastDirection = movePlayerScript.Direction.x;
         if(lastDirection > 0)
         {
             lastFacingDirection = 1;
@@ -207,8 +209,13 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Player died method. Explosion direction. Out true if spawned.
     /// </summary>
-    private void Die(Vector2 dir, out bool hasSpawned)
+    public void Die(Vector2 dir, out bool hasSpawned)
     {
+        if (spawnAnimation.IsPlaying)
+        {
+            hasSpawned = false;
+            return;
+        }
         ExplodePlayerToPieces(dir);
         Lives--;
         Spawn(out hasSpawned);

@@ -4,9 +4,6 @@ using UnityEngine;
 
 public abstract class BaseWeapon : MonoBehaviour
 {
-    [SerializeField]
-    private int damage;
-
     protected float coolTimer;
     protected float coolTime;
     protected bool canShoot;
@@ -15,11 +12,6 @@ public abstract class BaseWeapon : MonoBehaviour
     protected List<BaseBullet> activeBullets;
 
     private Vector2 offset = Vector2.one * 100;
-
-    /// <summary>
-    /// Gets weapon damage
-    /// </summary>
-    public int Damage { get { return damage; } }
 
     /// <summary>
     /// Unity start.
@@ -55,7 +47,8 @@ public abstract class BaseWeapon : MonoBehaviour
             if (pos.x > Screen.width + offset.x
                 || pos.x < -offset.x
                 || pos.y < -offset.y
-                || pos.y > Screen.height + offset.y)
+                || pos.y > Screen.height + offset.y
+                || activeBullets[i].isActiveAndEnabled == false)
             {
                 inactiveBullets.Add(activeBullets[i]);
                 activeBullets[i].gameObject.SetActive(false);

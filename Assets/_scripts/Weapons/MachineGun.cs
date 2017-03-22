@@ -6,10 +6,13 @@ using System.Linq;
 
 public class MachineGun : BaseWeapon
 {
+    private const int BulletPositionOffset = 10;
     private const int PoolItemsCount = 200;
 
     [SerializeField]
     private GameObject bulletPrefab;
+
+    private ParticleSystem emitter;
 
     /// <summary>
     ///  Unity start.
@@ -19,6 +22,7 @@ public class MachineGun : BaseWeapon
         base.Start();
         inactiveBullets = new List<BaseBullet>();
         activeBullets = new List<BaseBullet>();
+        emitter = GetComponent<ParticleSystem>();
 
 
         coolTime = WeaponsConstants.MachinGunCoolTime;
@@ -44,9 +48,18 @@ public class MachineGun : BaseWeapon
             {
                 inactiveBullets.RemoveAt(0);
                 activeBullets.Add(bullet);
+
+                var offset = BulletPositionOffset;
+                if(direction.x < 0)
+                {
+                    offset *= -1;
+                }
+            
                 bullet.gameObject.transform.position = gameObject.transform.position;
+                bullet.gameObject.transform.Translate(offset, 0, 0);
                 bullet.Direction = direction;
                 bullet.gameObject.SetActive(true);
+                emitter.Play();
             }
             
         }
