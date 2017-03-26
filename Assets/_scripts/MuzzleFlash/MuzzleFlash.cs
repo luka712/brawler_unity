@@ -37,8 +37,11 @@ public class MuzzleFlash : MonoBehaviour
 	private void Start()
     {
         renderer = GetComponent<SpriteRenderer>();
-        initialColor = renderer.color;
         initialRotation = this.transform.rotation;
+
+        initialColor = renderer.color;
+        initialColor.a = 0f;
+        renderer.color = initialColor;
     }
 
     /// <summary>
