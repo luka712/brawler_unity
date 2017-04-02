@@ -5,6 +5,9 @@ using UnityEngine;
 public class MovePlayer : MonoBehaviour
 {
     private float startingScaleX;
+    private int previousDirectionX;
+    private bool collidingTileRight = false;
+    private bool collidingTileLeft = false;
 
     /// <summary>
     /// Gets or set player movement speed
@@ -19,13 +22,15 @@ public class MovePlayer : MonoBehaviour
     private float jumpStrength = 3f;
 
 
-    private bool canJump = false;
     private Collider2D thisCollider;
+    private Collider2D groundCollider;
     private Rigidbody2D rb;
     private Animator animator;
     private PlayerIndex playerIndex;
 
     public Vector2 Direction { get; private set; }
+    public bool Grounded { get; set; }
+    public bool AirControl { get; set; }
 
     #region Unity Methods
 
@@ -35,6 +40,7 @@ public class MovePlayer : MonoBehaviour
     private void Start()
     {
         thisCollider = GetComponent<Collider2D>();
+        groundCollider = GetComponentInChildren<Collider2D>();
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         playerIndex = GetComponent<Player>().PlayerIndex;
@@ -42,6 +48,7 @@ public class MovePlayer : MonoBehaviour
         jumpStrength *= Constants.JumpStrengthMultipler;
 
         startingScaleX = gameObject.transform.localScale.x;
+        AirControl = true;
     }
 
     /// <summary>
@@ -50,23 +57,17 @@ public class MovePlayer : MonoBehaviour
     private void FixedUpdate()
     {
         float directionX = 0;
-        if(playerIndex == PlayerIndex.One)
+        if (playerIndex == PlayerIndex.One)
         {
-            if(Input.GetKey(KeyCode.LeftArrow))
-            {
-                directionX = -1;
-            }
-            else if(Input.GetKey(KeyCode.RightArrow))
-            {
-                directionX = 1;
-            }
 
-            if(Input.GetKeyDown(KeyCode.Space))
+            directionX = Input.GetAxis(Axis.Horizontal);
+
+            if (Input.GetKeyDown(KeyCode.Space))
             {
                 Jump();
             }
         }
-        else if(playerIndex == PlayerIndex.Two)
+        else if (playerIndex == PlayerIndex.Two)
         {
             directionX = Input.GetAxis(Axis.Horizontal);
 
@@ -76,37 +77,56 @@ public class MovePlayer : MonoBehaviour
             }
         }
 
-        if(directionX > 0)
+        if (directionX > 0)
         {
-            directionX = 1;
+            directionX = 1f;
         }
-        else if(directionX < 0)
+        else if (directionX < 0)
         {
-            directionX = -1;
+            directionX = -1f;
         }
 
+        float direction = directionX * speed;
         animator.SetFloat(AnimationNames.Running, Mathf.Abs(directionX));
-        float direction = directionX * Time.deltaTime * speed;
-        this.transform.Translate(Vector3.right * direction);
-
-        SwitchDirection(directionX);
-    }
-
-    /// <summary>
-    /// On collision with other object.
-    /// </summary>
-    private void OnCollisionEnter2D(Collision2D coll)
-    {
-        if (coll.gameObject.tag == "Tile")
+        if (Grounded || AirControl)
         {
-            var contanctPoint = coll.contacts[0].point;
-            if (this.thisCollider.bounds.center.y >= contanctPoint.y)
+            if(!(directionX == 1f && collidingTileRight)
+                && !(directionX == -1f && collidingTileLeft))
             {
-                canJump = true;
-                animator.SetBool(AnimationNames.Jumping, false);
+                rb.velocity = new Vector2(direction, rb.velocity.y);
             }
         }
 
+        SwitchDirection(directionX);
+        previousDirectionX = (int)directionX;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // stupid collisions fix
+        if (collision.gameObject.tag == Tags.Tile)
+        {
+            var collisionPoint = collision.contacts[0];
+            if (collisionPoint.point.x > thisCollider.transform.position.x)
+            {
+                collidingTileRight = true;
+                collidingTileLeft = false;
+            }
+            else
+            {
+                collidingTileLeft = true;
+                collidingTileRight = false;
+            }
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == Tags.Tile)
+        {
+            collidingTileRight = false;
+            collidingTileLeft = false;
+        }
     }
 
     #endregion Unity Methods
@@ -118,10 +138,10 @@ public class MovePlayer : MonoBehaviour
     /// </summary>
     private void Jump()
     {
-        if ( canJump)
+        if (Grounded)
         {
-            rb.AddForce(Vector2.up * jumpStrength);
-            canJump = false;
+            rb.AddForce(new Vector2(0, jumpStrength));
+            Grounded = true;
             animator.SetBool(AnimationNames.Jumping, true);
         }
     }

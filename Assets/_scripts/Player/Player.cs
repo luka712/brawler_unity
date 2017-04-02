@@ -8,7 +8,6 @@ public delegate void HealthChange(int health);
 public class Player : MonoBehaviour
 {
     private DivideSprite spriteDivider;
-    private SpawnPlayer playerSpawner;
     private PlayerInvicibleTimeAnimation spawnAnimation;
     private SpriteRenderer rend;
     private Rigidbody2D rigBody;
@@ -77,7 +76,6 @@ public class Player : MonoBehaviour
     private void Start()
     {
         spriteDivider = GetComponent<DivideSprite>();
-        playerSpawner = this.gameObject.AddComponent<SpawnPlayer>();
         spawnAnimation = GetComponent<PlayerInvicibleTimeAnimation>();
         rend = GetComponent<SpriteRenderer>();
         rigBody = GetComponent<Rigidbody2D>();

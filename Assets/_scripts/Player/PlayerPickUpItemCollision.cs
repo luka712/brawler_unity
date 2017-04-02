@@ -36,8 +36,6 @@ public class PlayerPickUpItemCollision : MonoBehaviour
         if (collision.gameObject.tag == "PickUp")
         {
             var pickUpType = collision.gameObject.GetComponent<PickUpItem>().Type;
-            var pickUp = pickUps
-                .FirstOrDefault(x => x.Type == pickUpType);
 
             Type type = null;
             switch (pickUpType)

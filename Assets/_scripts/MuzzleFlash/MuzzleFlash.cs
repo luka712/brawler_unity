@@ -26,7 +26,7 @@ public class MuzzleFlash : MonoBehaviour
     /// </summary>
     public Vector2 MinAndMaxRotation = new Vector2(-10f, 10f); 
 
-    private SpriteRenderer renderer;
+    private SpriteRenderer thisRenderer;
     private bool play;
     private Color initialColor;
     private Quaternion initialRotation;
@@ -36,12 +36,12 @@ public class MuzzleFlash : MonoBehaviour
     /// </summary>
 	private void Start()
     {
-        renderer = GetComponent<SpriteRenderer>();
+        thisRenderer = GetComponent<SpriteRenderer>();
         initialRotation = this.transform.rotation;
 
-        initialColor = renderer.color;
+        initialColor = thisRenderer.color;
         initialColor.a = 0f;
-        renderer.color = initialColor;
+        thisRenderer.color = initialColor;
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ public class MuzzleFlash : MonoBehaviour
         if (play)
         {
             initialColor.a -= Time.deltaTime * fadeOutSpeed;
-            renderer.color = initialColor;
+            thisRenderer.color = initialColor;
             if (initialColor.a <= 0f)
             {
                 play = false;
@@ -68,7 +68,7 @@ public class MuzzleFlash : MonoBehaviour
         this.transform.localScale
             = new Vector3(Random.Range(XRange.x, XRange.y), Random.Range(YRange.x, YRange.y), 1f);
         initialColor.a = 1f;
-        renderer.color = initialColor;
+        thisRenderer.color = initialColor;
 
         this.transform.rotation = initialRotation;
 

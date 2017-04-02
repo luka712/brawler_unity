@@ -28,7 +28,6 @@ public class MovePlatform : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        var pos = direction * speed * Time.deltaTime;
         this.transform.position += direction.ToVector3();
         if(towardsEnd && Vector2.Distance(this.transform.position.ToVector2(), endPoint) < 1f)
         {

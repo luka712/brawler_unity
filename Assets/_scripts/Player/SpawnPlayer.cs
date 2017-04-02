@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class SpawnPlayer : MonoBehaviour
 {
-    [SerializeField]
-    private float initialSpawnTime = 2f;
     /// <summary>
     /// Number of players to add.
     /// </summary>
